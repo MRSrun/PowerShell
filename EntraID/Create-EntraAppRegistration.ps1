@@ -1,57 +1,60 @@
-# PowerShell-Skript zum Erstellen einer Entra ID App-Registrierung und Hinzufügen von Ownern
+# PowerShell-Skript zum Erstellen einer Entra ID App-Registrierung, Service Principal und Hinzufügen von Ownern
 
-# Parameter für die App-Registrierung
-#$AppName = "APP1" # Name der App-Registrierung
+# Liste der App-Namen
 $ArrApps = @(
     "APP1",
     "APP2",
     "APP3"
 )
+
+# Liste der UPNs der Owner
 $OwnerUPNs = @(
     "user1@contoso.com",
-    "user2@contoso.come",
+    "user2@contoso.com",
     "user3@contoso.com"
-) # Liste der UPNs der Owner
+)
 
 # Verbindung zu Microsoft Graph herstellen
 Write-Host "Verbinde mit Microsoft Graph..."
 Connect-MgGraph -Scopes "Application.ReadWrite.All", "Directory.ReadWrite.All" -ErrorAction Stop
 
-foreach ($AppName in $ArrApps)
-{
-    
-
+foreach ($AppName in $ArrApps) {
     try {
-        # Erstellen der App-Registrierung
+        # App-Registrierung erstellen
         Write-Host "Erstelle App-Registrierung '$AppName'..."
         $app = New-MgApplication -DisplayName $AppName -SignInAudience "AzureADMyOrg" -ErrorAction Stop
-    
         Write-Host "App-Registrierung erstellt. AppId: $($app.AppId)"
-    
+
+        # Service Principal (Enterprise Application) erstellen
+        Write-Host "Erstelle Service Principal für '$AppName'..."
+        $sp = New-MgServicePrincipal -AppId $app.AppId -ErrorAction Stop
+        Write-Host "Service Principal erstellt. Objekt-ID: $($sp.Id)"
+
         # Owner hinzufügen
         Write-Host "Füge Owner hinzu..."
         foreach ($upn in $OwnerUPNs) {
-            # Benutzer anhand der UPN suchen
-            $user = Get-MgUser -Filter "userPrincipalName eq '$upn'" -ErrorAction Stop
-            if ($user) {
-                # Owner der App-Registrierung hinzufügen
-                New-MgApplicationOwnerByRef -ApplicationId $app.Id -OdataId "https://graph.microsoft.com/v1.0/directoryObjects/$($user.Id)" -ErrorAction Stop
-                Write-Host "Owner $upn erfolgreich hinzugefügt."
-            } else {
-                Write-Warning "Benutzer mit UPN $upn wurde nicht gefunden."
+            try {
+                # Benutzer anhand der UPN suchen
+                $user = Get-MgUser -Filter "userPrincipalName eq '$upn'" -ErrorAction Stop
+                if ($user) {
+                    # Owner der App-Registrierung hinzufügen
+                    New-MgApplicationOwnerByRef -ApplicationId $app.Id -OdataId "https://graph.microsoft.com/v1.0/directoryObjects/$($user.Id)" -ErrorAction Stop
+                    Write-Host "Owner $upn erfolgreich hinzugefügt."
+                } else {
+                    Write-Warning "Benutzer mit UPN $upn wurde nicht gefunden."
+                }
+            } catch {
+                Write-Warning "Fehler beim Hinzufügen von Owner $upn: $_"
             }
         }
-    
+
         Write-Host "App-Registrierung '$AppName' wurde erfolgreich erstellt und konfiguriert."
     }
     catch {
         Write-Error "Fehler beim Erstellen der App-Registrierung oder Hinzufügen der Owner: $_"
     }
-    finally {
-        # Verbindung trennen
-        Write-Host "App-Registrierung '$AppName' wurde erfolgreich erstellt und konfiguriert."
-    }
-
 }
+
+# Verbindung trennen
 Disconnect-MgGraph -ErrorAction SilentlyContinue
 Write-Host "Verbindung zu Microsoft Graph getrennt."
