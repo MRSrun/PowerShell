@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     This script performs the following steps:
-    1. Collects VNets from all Azure subscriptions except those with names starting with "visual".
+    1. Collects VNets from all Azure subscriptions except those with names starting with "visual" to exclude Visual Studio Subscriptions-
     2. Categorizes each VNet based on the subscription name.
     3. Retrieves all Azure Private DNS Zones in the current context.
     4. Links each VNet to each DNS Zone, enabling auto-registration for a specific zone ("demo.com").
