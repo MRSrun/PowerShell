@@ -20,7 +20,7 @@ Der Benutzer-Principal-Name (UPN) oder die Objekt-ID des Benutzers, dessen Authe
 .EXAMPLE
 # Entfernt alle Authentifizierungsmethoden (außer Passwort) von max@mustermann.org
 $userId = 'max@mustermann.org'
-.\Remove-UserAuthMethods.ps1
+.\EntraIDResetMFAAll.ps1
 
 .NOTES
 Autor: Marc Schramm  
