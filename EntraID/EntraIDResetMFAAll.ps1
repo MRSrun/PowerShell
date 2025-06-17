@@ -1,3 +1,34 @@
+<#
+.SYNOPSIS
+Löscht alle unterstützten Authentifizierungsmethoden eines Benutzers in Entra ID mittels Microsoft Graph API.
+
+.DESCRIPTION
+Dieses Skript ruft alle Authentifizierungsmethoden eines Benutzers ab und entfernt sie — mit Ausnahme der Passwortmethode, 
+die derzeit nicht über die Graph API löschbar ist. Standardmethoden werden zuletzt entfernt, da diese nur gelöscht werden 
+können, wenn sie die letzte verbleibende Methode sind. Das Skript nutzt Microsoft Graph PowerShell Cmdlets zur gezielten 
+Löschung jeder Methode anhand ihres Typs.
+
+.PARAMETER userId
+Der Benutzer-Principal-Name (UPN) oder die Objekt-ID des Benutzers, dessen Authentifizierungsmethoden entfernt werden sollen.
+
+.REQUIREMENTS
+- Microsoft Graph PowerShell SDK (`Microsoft.Graph.AuthenticationMethods`)
+- Berechtigungen:
+  - `UserAuthenticationMethod.ReadWrite.All`
+- PowerShell 7 oder höher empfohlen
+
+.EXAMPLE
+# Entfernt alle Authentifizierungsmethoden (außer Passwort) von max@mustermann.org
+$userId = 'max@mustermann.org'
+.\Remove-UserAuthMethods.ps1
+
+.NOTES
+Autor: Marc Schramm  
+Version: 1.0  
+Letzte Änderung: 17.06.2025
+#>
+
+
 $userId = 'max@mustermann.org'
 function DeleteAuthMethod($uid, $method){
     switch ($method.AdditionalProperties['@odata.type']) {
