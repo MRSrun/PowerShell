@@ -1,3 +1,38 @@
+<#
+.SYNOPSIS
+Erstellt mehrere Entra ID App-Registrierungen inkl. zugehöriger Service Principals und weist Owner zu.
+
+.DESCRIPTION
+Dieses Skript verbindet sich mit Microsoft Graph, erstellt App-Registrierungen für eine definierte Liste von Anwendungsnamen, 
+setzt die `requestedAccessTokenVersion` auf 2, erstellt entsprechende Service Principals und fügt definierte Benutzer 
+(über ihre UPNs) als Owner zur jeweiligen App-Registrierung hinzu. Es eignet sich zur Automatisierung von Bereitstellungen 
+innerhalb eines Entra ID Tenants.
+
+.PARAMETER ArrApps
+Eine Liste von App-Namen, für die App-Registrierungen und Service Principals erstellt werden sollen.
+
+.PARAMETER OwnerUPNs
+Eine Liste von Benutzer-UPNs, die als Owner zu jeder App-Registrierung hinzugefügt werden sollen.
+
+.REQUIREMENTS
+- Microsoft Graph PowerShell SDK (`Microsoft.Graph`)
+- Berechtigungen:
+  - Application.ReadWrite.All
+  - Directory.ReadWrite.All
+- PowerShell 7 oder höher empfohlen
+
+.EXAMPLE
+# Beispielhafte Konfiguration und Ausführung
+$ArrApps = @("App1", "App2")
+$OwnerUPNs = @("admin1@contoso.com", "admin2@contoso.com")
+.\Create-EntraIDApps.ps1
+
+.NOTES
+Autor: Marc Schramm
+Version: 1.3  
+Letzte Änderung: 17.06.2025
+#>
+
 # PowerShell-Skript zum Erstellen einer Entra ID App-Registrierung, Service Principal und Hinzufügen von Ownern
 
 # Liste der App-Namen
