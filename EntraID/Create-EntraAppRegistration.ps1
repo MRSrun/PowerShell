@@ -44,7 +44,7 @@ foreach ($AppName in $ArrApps) {
                     Write-Warning "Benutzer mit UPN $upn wurde nicht gefunden."
                 }
             } catch {
-                Write-Warning "Fehler beim Hinzufügen von Owner $upn: $_"
+                Write-Warning "Fehler beim Hinzufügen von Owner $upn $_"
             }
         }
 
