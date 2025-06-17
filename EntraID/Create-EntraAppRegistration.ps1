@@ -25,6 +25,16 @@ foreach ($AppName in $ArrApps) {
         $app = New-MgApplication -DisplayName $AppName -SignInAudience "AzureADMyOrg" -ErrorAction Stop
         Write-Host "App-Registrierung erstellt. AppId: $($app.AppId)"
 
+        # Update App-Registrierung
+        # Setze die Requested Access Token Version auf 2
+        $params = @{
+            api = @{
+                requestedAccessTokenVersion = 2
+            }
+        }
+        Update-MgApplication -ApplicationId $($app.AppId) -BodyParameter $params
+        Write-Output "RequestedAccessTokenVersion auf 2 gesetzt für $AppName"
+
         # Service Principal (Enterprise Application) erstellen
         Write-Host "Erstelle Service Principal für '$AppName'..."
         $sp = New-MgServicePrincipal -AppId $app.AppId -ErrorAction Stop
