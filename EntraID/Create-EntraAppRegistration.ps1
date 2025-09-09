@@ -74,6 +74,7 @@ foreach ($AppName in $ArrApps) {
                 if ($user) {
                     # Owner der App-Registrierung hinzufügen
                     New-MgApplicationOwnerByRef -ApplicationId $app.Id -OdataId "https://graph.microsoft.com/v1.0/directoryObjects/$($user.Id)" -ErrorAction Stop
+                    New-MgServicePrincipalOwnerByRef -ServicePrincipalId $sp.Id -OdataId "https://graph.microsoft.com/v1.0/directoryObjects/$($user.Id)" -ErrorAction Stop
                     Write-Host "Owner $upn erfolgreich hinzugefügt."
                 } else {
                     Write-Warning "Benutzer mit UPN $upn wurde nicht gefunden."
