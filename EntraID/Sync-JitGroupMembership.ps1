@@ -33,7 +33,7 @@ Führt das Skript im Modus „Nur Vorschau“ aus. Zeigt an, welche Änderungen 
 .NOTES
 Autor: Marc Schramm
 Version: 1.0
-Letzte Änderung: 17.06.2025
+Letzte Änderung: 16.09.2025
 #>
 
 
