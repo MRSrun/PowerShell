@@ -1,3 +1,42 @@
+<#
+.SYNOPSIS
+Synchronisiert die Mitgliedschaften von JIT-Gruppen in EntraID basierend auf einer CSV-Datei.
+
+.DESCRIPTION
+Dieses Skript verbindet sich mit Microsoft Graph, liest eine CSV-Datei ein, die Benutzer (UPNs) 
+und deren zugehörige Just-In-Time-Gruppen (JIT-Groups) enthält, und stellt sicher, dass jede Gruppe
+die im CSV definierten Mitglieder hat. Optional kann das Skript Benutzer entfernen, die nicht in der 
+CSV aufgeführt sind, um die Mitgliedschaften strikt zu erzwingen. Unterstützt einen `-WhatIf`-Modus 
+zur Vorschau der Änderungen, ohne die Gruppen zu verändern.
+
+.PARAMETER CsvPath
+Pfad zur CSV-Datei mit den Spalten `Jit-Group` und `UPN`. Standard: `C:\Temp\jit_group_assignments.csv`.
+
+.PARAMETER EnforceCsvMembership
+Wenn gesetzt, entfernt das Skript Benutzer aus Gruppen, die nicht in der CSV-Datei aufgeführt sind.
+
+.PARAMETER WhatIf
+Führt das Skript im Modus „Nur Vorschau“ aus. Zeigt an, welche Änderungen vorgenommen würden, ohne sie tatsächlich durchzuführen.
+
+.REQUIREMENTS
+- Microsoft Graph PowerShell SDK (Modul: Microsoft.Graph)
+- Berechtigungen: Group.ReadWrite.All, User.Read.All
+- CSV-Datei mit gültigen Gruppennamen und Benutzer-Principal-Namen (UPN)
+
+.EXAMPLE
+# Vorschau der Änderungen, ohne die Gruppen zu ändern
+.\Sync-JitGroupMembership.ps1 -CsvPath "C:\Temp\jit_group_assignments.csv" -WhatIf
+
+# Synchronisieren der Gruppen und Entfernen von Benutzern, die nicht in der CSV stehen
+.\Sync-JitGroupMembership.ps1 -CsvPath "C:\Temp\jit_group_assignments.csv" -EnforceCsvMembership
+
+.NOTES
+Autor: Marc Schramm
+Version: 1.0
+Letzte Änderung: 17.06.2025
+#>
+
+
 param (
     [string]$CsvPath = "C:\Temp\jit_group_assignments.csv",
     [switch]$EnforceCsvMembership,
