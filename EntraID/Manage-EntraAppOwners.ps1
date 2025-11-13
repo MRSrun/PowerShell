@@ -193,8 +193,6 @@ if ($ListOnly) {
         Write-Host "No applications found for prefix '$Prefix'." -ForegroundColor Yellow
     }
 
-    #Disconnect-MgGraph
-    #exit
 }
 
 # ---------------------------------
@@ -252,5 +250,6 @@ if ($SyncOwners) {
     }
 
     Write-Host "`nOwnership synchronization complete for $Prefix." -ForegroundColor Green
-    #Disconnect-MgGraph
+
 }
+Disconnect-MgGraph
