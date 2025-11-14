@@ -19,6 +19,12 @@
 
     # Sync owners (add missing, remove extra)
     .\Manage-EntraAppOwners.ps1 -Prefix "demo_prod" -SyncOwners
+
+.NOTES
+    Autor: Marc Schramm
+    Version: 1.0  
+    Letzte Änderung: 13.11.2025
+
 #>
 
 param(
